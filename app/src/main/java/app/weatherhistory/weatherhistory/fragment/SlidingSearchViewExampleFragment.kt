@@ -21,13 +21,17 @@ import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.arlib.floatingsearchview.util.Util
+import kotlinx.android.synthetic.main.fragment_sliding_search_example.*
 
 class SlidingSearchViewExampleFragment : BaseFragment() {
 
     private val TAG = "fragtag"
+
     private lateinit var mSearchView: FloatingSearchView
+    private lateinit var mDimSearchViewBackground: View
+    private lateinit var mDimDrawable: ColorDrawable
+
     private var mLastQuery = ""
-    private var mDimDrawable: ColorDrawable? = null
     private val ANIM_DURATION: Long = 350
     val FIND_SUGGESTION_SIMULATED_DELAY: Long = 250
     private var mIsDarkSearchTheme = false
@@ -39,7 +43,13 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mSearchView = view?.findViewById(R.id.floating_search_view) as FloatingSearchView
+        mSearchView = floating_search_view
+        mDimSearchViewBackground = dim_background
+
+        mDimDrawable = ColorDrawable(Color.BLACK)
+        mDimDrawable.alpha = 0
+
+        mDimSearchViewBackground.background = mDimDrawable
 
         setupFloatingSearch()
         setupDrawer()
@@ -48,6 +58,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
     private fun setupDrawer() = attachSearchViewActivityDrawer(mSearchView)
 
     private fun setupFloatingSearch() {
+        val mSearchView = floating_search_view
         mSearchView.setOnQueryChangeListener(FloatingSearchView.OnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 mSearchView.clearSuggestions()
@@ -78,8 +89,9 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
         mSearchView.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion) {
-
                 mLastQuery = searchSuggestion.body
+
+                Log.d(TAG, "onSuggestionClicked(), value: ${searchSuggestion.body}")
             }
 
             override fun onSearchAction(query: String) {
@@ -114,7 +126,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
                 val headerHeight = resources.getDimensionPixelOffset(R.dimen.sliding_search_view_header_height)
                 val anim = ObjectAnimator.ofFloat(mSearchView, "translationY",
                         0f, headerHeight.toFloat())
-                anim.setDuration(350)
+                anim.duration = 350
                 anim.start()
                 fadeDimBackground(150, 0, null)
 
@@ -131,27 +143,11 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
         //handle menu clicks the same way as you would
         //in a regular activity
-        mSearchView.setOnMenuItemClickListener(FloatingSearchView.OnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_change_colors) {
+        mSearchView.setOnMenuItemClickListener({ item ->
+            //just print action
+            Toast.makeText(activity.applicationContext, item.title,
+                    Toast.LENGTH_SHORT).show()
 
-                mIsDarkSearchTheme = true
-
-                //demonstrate setting colors for items
-                mSearchView.setBackgroundColor(Color.parseColor("#787878"))
-                mSearchView.setViewTextColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setHintTextColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setActionMenuOverflowColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setMenuItemIconColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setLeftActionIconColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setClearBtnColor(Color.parseColor("#e9e9e9"))
-                mSearchView.setDividerColor(Color.parseColor("#BEBEBE"))
-                mSearchView.setLeftActionIconColor(Color.parseColor("#e9e9e9"))
-            } else {
-
-                //just print action
-                Toast.makeText(activity.applicationContext, item.title,
-                        Toast.LENGTH_SHORT).show()
-            }
         })
 
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
@@ -205,7 +201,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
         val anim = ValueAnimator.ofInt(from, to)
         anim.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            mDimDrawable?.alpha = value
+            mDimDrawable.alpha = value
         }
         if (listener != null) {
             anim.addListener(listener)
