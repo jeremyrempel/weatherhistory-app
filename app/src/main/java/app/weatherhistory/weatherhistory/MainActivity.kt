@@ -8,7 +8,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import app.weatherhistory.weatherhistory.fragment.BaseFragment
-import app.weatherhistory.weatherhistory.fragment.SlidingSearchViewExampleFragment
+import app.weatherhistory.weatherhistory.fragment.LocationSearchFragment
 import com.arlib.floatingsearchview.FloatingSearchView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, BaseFragment.BaseExampleFragmentCallbacks {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showFragment(SlidingSearchViewExampleFragment())
+        showFragment(LocationSearchFragment())
 
         drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
         val navigationView = findViewById(R.id.nav_view) as NavigationView

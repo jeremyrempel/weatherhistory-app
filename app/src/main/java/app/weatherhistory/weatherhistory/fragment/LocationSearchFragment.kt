@@ -20,13 +20,18 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import kotlinx.android.synthetic.main.fragment_sliding_search_example.*
 import timber.log.Timber
 
-class SlidingSearchViewExampleFragment : BaseFragment() {
+class LocationSearchFragment : BaseFragment() {
 
     private lateinit var dimDrawable: ColorDrawable
 
     private var lastQuery = ""
     private val ANIM_DURATION: Long = 350
     val FIND_SUGGESTION_SIMULATED_DELAY: Long = 250
+
+    /**
+     * The alpha value to set, between 0 and 255
+     */
+    val FADE_DIM_BG = 150
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_sliding_search_example, container, false)
@@ -48,7 +53,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
     private fun setupFloatingSearch() {
         val searchView = floating_search_view
-        searchView.setOnQueryChangeListener(FloatingSearchView.OnQueryChangeListener { oldQuery, newQuery ->
+        searchView.setOnQueryChangeListener({ oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchView.clearSuggestions()
             } else {
@@ -61,8 +66,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
                 //simulates a query call to a data source
                 //with a new query.
-                DataHelper.findSuggestions(activity, newQuery, 5,
-                        FIND_SUGGESTION_SIMULATED_DELAY) { results ->
+                DataHelper.findSuggestions(activity, newQuery, 5, FIND_SUGGESTION_SIMULATED_DELAY) { results ->
                     //this will swap the data and
                     //render the collapse/expand animations as necessary
                     searchView.swapSuggestions(results)
@@ -94,10 +98,9 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
             override fun onFocus() {
                 val headerHeight = resources.getDimensionPixelOffset(R.dimen.sliding_search_view_header_height)
 
-                val anim = ObjectAnimator.ofFloat(searchView, "translationY",
-                        headerHeight.toFloat(), 0f)
-                anim.duration = 350
-                fadeDimBackground(0, 150, null)
+                val anim = ObjectAnimator.ofFloat(searchView, "translationY", headerHeight.toFloat(), 0f)
+                anim.duration = ANIM_DURATION
+                fadeDimBackground(0, FADE_DIM_BG, null)
                 anim.addListener(object : AnimatorListenerAdapter() {
 
                     override fun onAnimationEnd(animation: Animator) {
@@ -112,14 +115,18 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
             override fun onFocusCleared() {
                 val headerHeight = resources.getDimensionPixelOffset(R.dimen.sliding_search_view_header_height)
-                val anim = ObjectAnimator.ofFloat(searchView, "translationY",
-                        0f, headerHeight.toFloat())
-                anim.duration = 350
+                val anim = ObjectAnimator.ofFloat(searchView, "translationY", 0f, headerHeight.toFloat())
+                anim.duration = ANIM_DURATION
                 anim.start()
-                fadeDimBackground(150, 0, null)
+                fadeDimBackground(FADE_DIM_BG, 0, null)
 
                 //set the title of the bar so that when focus is returned a new query begins
-                searchView.setSearchBarTitle(lastQuery)
+ //               searchView.setSearchBarTitle(lastQuery)
+                //searchView.setSearchText(lastQuery)
+
+                // clear search results
+                searchView.setSearchBarTitle("")
+                searchView.setSearchText("")
 
                 //you can also set setSearchText(...) to make keep the query there when not focused and when focus returns
                 //searchView.setSearchText(searchSuggestion.getBody());
@@ -137,9 +144,6 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
         })
 
-        //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
-        searchView.setOnHomeActionClickListener({ Timber.d("onHomeClicked()") })
-
         /*
          * Here you have access to the left icon and the text of a given suggestion
          * item after as it is bound to the suggestion list. You can utilize this
@@ -155,8 +159,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
             val colorSuggestion = item as ColorSuggestion
 
             if (colorSuggestion.isHistory) {
-                leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources,
-                        R.drawable.ic_history_black_24dp, null))
+                leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_history_black_24dp, null))
                 leftIcon.alpha = .36f
             } else {
                 leftIcon.alpha = 0.0f
@@ -175,10 +178,7 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
 
     private fun fadeDimBackground(from: Int, to: Int, listener: Animator.AnimatorListener?) {
         val anim = ValueAnimator.ofInt(from, to)
-        anim.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            dimDrawable.alpha = value
-        }
+        anim.addUpdateListener { dimDrawable.alpha = it.animatedValue as Int }
 
         listener?.let { anim.addListener(listener) }
         anim.duration = ANIM_DURATION
