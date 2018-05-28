@@ -15,7 +15,7 @@ open class BaseFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is BaseExampleFragmentCallbacks) {
-            mCallbacks = context as BaseExampleFragmentCallbacks?
+            mCallbacks = context
         } else {
             throw RuntimeException(context!!.toString() + " must implement BaseExampleFragmentCallbacks")
         }

@@ -8,8 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
-import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,23 +16,17 @@ import app.weatherhistory.weatherhistory.R
 import app.weatherhistory.weatherhistory.data.ColorSuggestion
 import app.weatherhistory.weatherhistory.data.DataHelper
 import com.arlib.floatingsearchview.FloatingSearchView
-import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
-import com.arlib.floatingsearchview.util.Util
 import kotlinx.android.synthetic.main.fragment_sliding_search_example.*
+import timber.log.Timber
 
 class SlidingSearchViewExampleFragment : BaseFragment() {
 
-    private val TAG = "fragtag"
+    private lateinit var dimDrawable: ColorDrawable
 
-    private lateinit var mSearchView: FloatingSearchView
-    private lateinit var mDimSearchViewBackground: View
-    private lateinit var mDimDrawable: ColorDrawable
-
-    private var mLastQuery = ""
+    private var lastQuery = ""
     private val ANIM_DURATION: Long = 350
     val FIND_SUGGESTION_SIMULATED_DELAY: Long = 250
-    private var mIsDarkSearchTheme = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_sliding_search_example, container, false)
@@ -43,32 +35,29 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mSearchView = floating_search_view
-        mDimSearchViewBackground = dim_background
-
-        mDimDrawable = ColorDrawable(Color.BLACK)
-        mDimDrawable.alpha = 0
-
-        mDimSearchViewBackground.background = mDimDrawable
+        val dimSearchViewBackground = dim_background
+        dimDrawable = ColorDrawable(Color.BLACK)
+        dimDrawable.alpha = 0
+        dimSearchViewBackground.background = dimDrawable
 
         setupFloatingSearch()
         setupDrawer()
     }
 
-    private fun setupDrawer() = attachSearchViewActivityDrawer(mSearchView)
+    private fun setupDrawer() = attachSearchViewActivityDrawer(floating_search_view)
 
     private fun setupFloatingSearch() {
-        val mSearchView = floating_search_view
-        mSearchView.setOnQueryChangeListener(FloatingSearchView.OnQueryChangeListener { oldQuery, newQuery ->
+        val searchView = floating_search_view
+        searchView.setOnQueryChangeListener(FloatingSearchView.OnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
-                mSearchView.clearSuggestions()
+                searchView.clearSuggestions()
             } else {
 
                 //this shows the top left circular progress
                 //you can call it where ever you want, but
                 //it makes sense to do it when loading something in
                 //the background.
-                mSearchView.showProgress()
+                searchView.showProgress()
 
                 //simulates a query call to a data source
                 //with a new query.
@@ -76,82 +65,80 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
                         FIND_SUGGESTION_SIMULATED_DELAY) { results ->
                     //this will swap the data and
                     //render the collapse/expand animations as necessary
-                    mSearchView.swapSuggestions(results)
+                    searchView.swapSuggestions(results)
 
                     //let the users know that the background
                     //process has completed
-                    mSearchView.hideProgress()
+                    searchView.hideProgress()
                 }
             }
 
-            Log.d(TAG, "onSearchTextChanged()")
+            Timber.d("onSearchTextChanged()")
         })
 
-        mSearchView.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
+        searchView.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion) {
-                mLastQuery = searchSuggestion.body
+                lastQuery = searchSuggestion.body
 
-                Log.d(TAG, "onSuggestionClicked(), value: ${searchSuggestion.body}")
+                Timber.d("onSuggestionClicked(), value: ${searchSuggestion.body}")
             }
 
             override fun onSearchAction(query: String) {
-                mLastQuery = query
+                lastQuery = query
 
-                Log.d(TAG, "onSearchAction()")
+                Timber.d("onSearchAction()")
             }
         })
 
-        mSearchView.setOnFocusChangeListener(object : FloatingSearchView.OnFocusChangeListener {
+        searchView.setOnFocusChangeListener(object : FloatingSearchView.OnFocusChangeListener {
             override fun onFocus() {
                 val headerHeight = resources.getDimensionPixelOffset(R.dimen.sliding_search_view_header_height)
 
-                val anim = ObjectAnimator.ofFloat(mSearchView, "translationY",
+                val anim = ObjectAnimator.ofFloat(searchView, "translationY",
                         headerHeight.toFloat(), 0f)
-                anim.setDuration(350)
+                anim.duration = 350
                 fadeDimBackground(0, 150, null)
                 anim.addListener(object : AnimatorListenerAdapter() {
 
                     override fun onAnimationEnd(animation: Animator) {
                         //show suggestions when search bar gains focus (typically history suggestions)
-                        mSearchView.swapSuggestions(DataHelper.getHistory(activity, 3))
-
+                        searchView.swapSuggestions(DataHelper.getHistory(activity, 3))
                     }
                 })
                 anim.start()
 
-                Log.d(TAG, "onFocus()")
+                Timber.d("onFocus()")
             }
 
             override fun onFocusCleared() {
                 val headerHeight = resources.getDimensionPixelOffset(R.dimen.sliding_search_view_header_height)
-                val anim = ObjectAnimator.ofFloat(mSearchView, "translationY",
+                val anim = ObjectAnimator.ofFloat(searchView, "translationY",
                         0f, headerHeight.toFloat())
                 anim.duration = 350
                 anim.start()
                 fadeDimBackground(150, 0, null)
 
                 //set the title of the bar so that when focus is returned a new query begins
-                mSearchView.setSearchBarTitle(mLastQuery)
+                searchView.setSearchBarTitle(lastQuery)
 
                 //you can also set setSearchText(...) to make keep the query there when not focused and when focus returns
-                //mSearchView.setSearchText(searchSuggestion.getBody());
+                //searchView.setSearchText(searchSuggestion.getBody());
 
-                Log.d(TAG, "onFocusCleared()")
+                Timber.d("onFocusCleared()")
             }
         })
 
 
         //handle menu clicks the same way as you would
         //in a regular activity
-        mSearchView.setOnMenuItemClickListener({ item ->
+        searchView.setOnMenuItemClickListener({ item ->
             //just print action
-            Toast.makeText(activity.applicationContext, item.title,
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity.applicationContext, item.title, Toast.LENGTH_SHORT).show()
 
         })
 
         //use this listener to listen to menu clicks when app:floatingSearch_leftAction="showHome"
-        mSearchView.setOnHomeActionClickListener(FloatingSearchView.OnHomeActionClickListener { Log.d(TAG, "onHomeClicked()") })
+        searchView.setOnHomeActionClickListener({ Timber.d("onHomeClicked()") })
 
         /*
          * Here you have access to the left icon and the text of a given suggestion
@@ -164,28 +151,17 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
          * Keep in mind that the suggestion list is a RecyclerView, so views are reused for different
          * items in the list.
          */
-        mSearchView.setOnBindSuggestionCallback(SearchSuggestionsAdapter.OnBindSuggestionCallback { suggestionView, leftIcon, textView, item, itemPosition ->
+        searchView.setOnBindSuggestionCallback({ suggestionView, leftIcon, textView, item, itemPosition ->
             val colorSuggestion = item as ColorSuggestion
 
-            val textColor = if (mIsDarkSearchTheme) "#ffffff" else "#000000"
-            val textLight = if (mIsDarkSearchTheme) "#bfbfbf" else "#787878"
-
-            if (colorSuggestion.getIsHistory()) {
+            if (colorSuggestion.isHistory) {
                 leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources,
                         R.drawable.ic_history_black_24dp, null))
-
-                Util.setIconColor(leftIcon, Color.parseColor(textColor))
                 leftIcon.alpha = .36f
             } else {
                 leftIcon.alpha = 0.0f
                 leftIcon.setImageDrawable(null)
             }
-
-            textView.setTextColor(Color.parseColor(textColor))
-            val text = colorSuggestion.getBody()
-                    .replaceFirst(mSearchView.getQuery(),
-                            "<font color=\"" + textLight + "\">" + mSearchView.getQuery() + "</font>")
-            textView.text = Html.fromHtml(text)
         })
 
         /*
@@ -194,18 +170,17 @@ class SlidingSearchViewExampleFragment : BaseFragment() {
          *
          * This listener provides a callback for when this button is clicked.
          */
-        mSearchView.setOnClearSearchActionListener(FloatingSearchView.OnClearSearchActionListener { Log.d(TAG, "onClearSearchClicked()") })
+        searchView.setOnClearSearchActionListener({ Timber.d("onClearSearchClicked()") })
     }
 
     private fun fadeDimBackground(from: Int, to: Int, listener: Animator.AnimatorListener?) {
         val anim = ValueAnimator.ofInt(from, to)
         anim.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            mDimDrawable.alpha = value
+            dimDrawable.alpha = value
         }
-        if (listener != null) {
-            anim.addListener(listener)
-        }
+
+        listener?.let { anim.addListener(listener) }
         anim.duration = ANIM_DURATION
         anim.start()
     }
