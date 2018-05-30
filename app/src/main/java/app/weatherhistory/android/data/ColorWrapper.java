@@ -1,4 +1,4 @@
-package app.weatherhistory.weatherhistory.data;
+package app.weatherhistory.android.data;
 
 /**
  * Copyright (C) 2015 Ari C.

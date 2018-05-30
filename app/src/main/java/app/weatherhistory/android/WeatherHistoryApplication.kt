@@ -1,4 +1,4 @@
-package app.weatherhistory.weatherhistory
+package app.weatherhistory.android
 
 import android.app.Application
 import timber.log.Timber

@@ -1,4 +1,4 @@
-package app.weatherhistory.weatherhistory.data;
+package app.weatherhistory.android.data;
 
 import android.os.Parcel;
 

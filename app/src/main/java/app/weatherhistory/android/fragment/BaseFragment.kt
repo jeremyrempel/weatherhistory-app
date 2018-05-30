@@ -1,4 +1,4 @@
-package app.weatherhistory.weatherhistory.fragment
+package app.weatherhistory.android.fragment
 
 import android.content.Context
 import android.support.v4.app.Fragment
@@ -19,6 +19,11 @@ open class BaseFragment : Fragment() {
         } else {
             throw RuntimeException(context!!.toString() + " must implement BaseExampleFragmentCallbacks")
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mCallbacks = null
     }
 
     protected fun attachSearchViewActivityDrawer(searchView: FloatingSearchView) {

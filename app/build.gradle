@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -20,9 +21,19 @@ android {
     }
 }
 
+// enable @Persistence
+androidExtensions {
+    experimental = true
+}
+
 ext {
     floatingSearchVersion = '2.1.1'
     timberVersion = '4.7.0'
+    rxJavaVersion = '2.1.9'
+    rxAndroidVersion = '2.0.1'
+    retroFitVersion = '2.4.0'
+    roomVersion = '1.1.0'
+    archLifecycleVersion = '1.1.1'
 }
 
 dependencies {
@@ -33,6 +44,15 @@ dependencies {
 
     // logging
     implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // rxjava
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retroFitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retroFitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retroFitVersion"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

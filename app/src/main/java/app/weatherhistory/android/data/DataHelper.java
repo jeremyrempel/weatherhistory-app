@@ -1,4 +1,4 @@
-package app.weatherhistory.weatherhistory.data;
+package app.weatherhistory.android.data;
 
 /**
  * Copyright (C) 2015 Ari C.
@@ -18,7 +18,6 @@ package app.weatherhistory.weatherhistory.data;
 
 import android.content.Context;
 import android.widget.Filter;
-
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
