@@ -45,6 +45,9 @@ dependencies {
     implementation "com.android.support:animated-vector-drawable:$supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$supportLibraryVersion"
 
+    // arch components
+    implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
+
     // floating search
     implementation "com.github.arimorty:floatingsearchview:$floatingSearchVersion"
 
