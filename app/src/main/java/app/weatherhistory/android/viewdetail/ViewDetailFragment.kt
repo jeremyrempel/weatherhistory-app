@@ -2,12 +2,14 @@ package app.weatherhistory.android.viewdetail
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.weatherhistory.android.R
 import kotlinx.android.synthetic.main.fragment_viewdetail.*
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 
 
 class ViewDetailFragment : Fragment() {
@@ -34,6 +36,7 @@ class ViewDetailFragment : Fragment() {
         stationCode = arguments?.getString("stationcode") ?: throw IllegalArgumentException("stationcode is required")
         locationName = arguments?.getString("locationname") ?: throw IllegalArgumentException("locationname is required")
 
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -45,6 +48,13 @@ class ViewDetailFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
         station_code.text = stationCode
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> activity?.supportFragmentManager?.popBackStack()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

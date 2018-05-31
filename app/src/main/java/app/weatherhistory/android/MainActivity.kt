@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         showFragment(LocationSearchFragment())
 
-        drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
+        drawerLayout = drawer_layout
         val navigationView = nav_view
         navigationView.setNavigationItemSelectedListener(this)
     }
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .beginTransaction()
                 .setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out)
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commitAllowingStateLoss()
     }
 }

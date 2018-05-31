@@ -118,7 +118,8 @@ class LocationSearchFragment : Fragment() {
                     override fun onSuggestionClicked(searchSuggestion: SearchSuggestion) {
 
                         if (searchSuggestion is LocationSuggestion) {
-                            lastQuery = searchSuggestion.stationCode
+                            lastQuery = ""
+                            searchView.clearFocus()
                             Timber.d("onSuggestionClicked(), stationCode: ${searchSuggestion.stationCode}")
 
                             callback?.onNavigateToDetail(searchSuggestion.stationCode, searchSuggestion.name)
