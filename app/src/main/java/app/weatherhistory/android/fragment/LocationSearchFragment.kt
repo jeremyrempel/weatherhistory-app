@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import app.weatherhistory.android.R
-import app.weatherhistory.android.data.DataHelper
 import app.weatherhistory.android.data.LocationSuggestion
 import app.weatherhistory.android.repository.LocationRepositoryRetrofit
 import app.weatherhistory.model.Location
@@ -31,7 +30,6 @@ class LocationSearchFragment : BaseFragment() {
 
     private var lastQuery = ""
     private val ANIM_DURATION: Long = 350
-    val FIND_SUGGESTION_SIMULATED_DELAY: Long = 250
 
     /**
      * The alpha value to set, between 0 and 255
@@ -56,12 +54,9 @@ class LocationSearchFragment : BaseFragment() {
 
     private fun setupDrawer() = attachSearchViewActivityDrawer(floating_search_view)
 
-    private fun setupFloatingSearch() {
-
+    private fun setupSearchSubject(searchView: FloatingSearchView): PublishSubject<String> {
         val subject = PublishSubject.create<String>()
         val locationService = LocationRepositoryRetrofit(context.applicationContext)
-        val searchView = floating_search_view
-
 
         subject
                 .filter { it.isNotBlank() }
@@ -73,7 +68,7 @@ class LocationSearchFragment : BaseFragment() {
                             .onExceptionResumeNext { emptyList<Location>() }
                             .toObservable()
                 }
-                .map { it.map { LocationSuggestion(it.name) } }
+                .map { it.map { LocationSuggestion(it.stationCode, it.name, it.state, it.countryCode) } }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -90,30 +85,20 @@ class LocationSearchFragment : BaseFragment() {
                         }
                 )
 
+        return subject
+    }
+
+    private fun setupFloatingSearch() {
+
+        val searchView = floating_search_view
+        val subject = setupSearchSubject(searchView)
+
         searchView.setOnQueryChangeListener({ oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchView.clearSuggestions()
             } else {
-
-                //this shows the top left circular progress
-                //you can call it where ever you want, but
-                //it makes sense to do it when loading something in
-                //the background.
-
                 searchView.showProgress()
                 subject.onNext(newQuery)
-
-//                //simulates a query call to a data source
-//                //with a new query.
-//                DataHelper.findSuggestions(activity, newQuery, 5, FIND_SUGGESTION_SIMULATED_DELAY) { results ->
-//                    //this will swap the data and
-//                    //render the collapse/expand animations as necessary
-//                    searchView.swapSuggestions(results)
-//
-//                    //let the users know that the background
-//                    //process has completed
-//                    searchView.hideProgress()
-//                }
             }
 
             Timber.d("onSearchTextChanged($newQuery)")
@@ -121,16 +106,16 @@ class LocationSearchFragment : BaseFragment() {
 
         searchView.setOnSearchListener(
                 object : FloatingSearchView.OnSearchListener {
-                    override fun onSuggestionClicked(searchSuggestion: SearchSuggestion) {
-                        lastQuery = searchSuggestion.body
-
-                        Timber.d("onSuggestionClicked(), value: ${searchSuggestion.body}")
+                    override fun onSearchAction(currentQuery: String?) {
+                        // do something?
                     }
 
-                    override fun onSearchAction(query: String) {
-                        lastQuery = query
+                    override fun onSuggestionClicked(searchSuggestion: SearchSuggestion) {
 
-                        Timber.d("onSearchAction()")
+                        if (searchSuggestion is LocationSuggestion) {
+                            lastQuery = searchSuggestion.stationCode
+                            Timber.d("onSuggestionClicked(), value: $searchSuggestion")
+                        }
                     }
                 })
 
@@ -146,7 +131,7 @@ class LocationSearchFragment : BaseFragment() {
 
                             override fun onAnimationEnd(animation: Animator) {
                                 //show suggestions when search bar gains focus (typically history suggestions)
-                                searchView.swapSuggestions(DataHelper.getHistory(activity, 3))
+                                //searchView.swapSuggestions(DataHelper.getHistory(activity, 3))
                             }
                         })
                         anim.start()
@@ -181,9 +166,16 @@ class LocationSearchFragment : BaseFragment() {
         //in a regular activity
         searchView.setOnMenuItemClickListener(
                 { item ->
-                    //just print action
-                    Toast.makeText(activity.applicationContext, item.title, Toast.LENGTH_SHORT).show()
 
+                    when (item.itemId) {
+                        R.id.action_location -> {
+                            // todo
+                            /* query based on location */
+                        }
+                        else -> {
+                            Timber.w("Unhandled action: $item")
+                        }
+                    }
                 })
 
         /*
@@ -201,14 +193,8 @@ class LocationSearchFragment : BaseFragment() {
                 { suggestionView, leftIcon, textView, item, itemPosition ->
                     val colorSuggestion = item
 
-
-//            if (colorSuggestion.isHistory) {
-//                leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_history_black_24dp, null))
-//                leftIcon.alpha = .36f
-//            } else {
-//                leftIcon.alpha = 0.0f
-//                leftIcon.setImageDrawable(null)
-//            }
+                    // todo show country flag
+                    //leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_history_black_24dp, null))
                 })
 
         /*
