@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 
-class LocationSuggestion(var stationCode: String, private var name: String, private var state: String?, private var countryCode: String) : SearchSuggestion {
+class LocationSuggestion(var stationCode: String, var name: String, private var state: String?, private var countryCode: String) : SearchSuggestion {
 
     constructor(parcel: Parcel) : this(parcel.readString(), parcel.readString(), parcel.readString(), parcel.readString()) {
         parcel.apply {

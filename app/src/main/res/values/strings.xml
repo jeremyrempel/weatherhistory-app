@@ -6,7 +6,6 @@
     <string name="action_example_scrolling_search_bar">scrolling search bar</string>
     <string name="action_voice_rec">Voice</string>
     <string name="action_location">Location</string>
-    <string name="action_taxi">Taxi</string>
-    <string name="action_change_colors">Change Color</string>
     <string name="search_hint">Search destination</string>
+    <string name="monthly_average">Monthly Average</string>
 </resources>

@@ -4,15 +4,16 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import app.weatherhistory.android.R
-import app.weatherhistory.android.BaseFragment
 import app.weatherhistory.model.Location
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
@@ -23,12 +24,14 @@ import kotlinx.android.synthetic.main.fragment_location_search.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class LocationSearchFragment : BaseFragment() {
+class LocationSearchFragment : Fragment() {
 
     private lateinit var dimDrawable: ColorDrawable
 
     private var lastQuery = ""
     private val ANIM_DURATION: Long = 350
+    var callback: LocationSearchFragment.BaseExampleFragmentCallbacks? = null
+
 
     /**
      * The alpha value to set, between 0 and 255
@@ -39,7 +42,7 @@ class LocationSearchFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_location_search, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val dimSearchViewBackground = dim_background
@@ -51,11 +54,14 @@ class LocationSearchFragment : BaseFragment() {
         setupDrawer()
     }
 
-    private fun setupDrawer() = attachSearchViewActivityDrawer(floating_search_view)
+    private fun setupDrawer() = callback?.let { it.onAttachSearchViewToDrawer(floating_search_view) }
 
     private fun setupSearchSubject(searchView: FloatingSearchView): PublishSubject<String> {
         val subject = PublishSubject.create<String>()
-        val locationService = LocationRepositoryRetrofit(context.applicationContext)
+
+        val appContext = context ?: throw IllegalArgumentException("No application context")
+
+        val locationService = LocationRepositoryRetrofit(appContext)
 
         subject
                 .filter { it.isNotBlank() }
@@ -113,7 +119,9 @@ class LocationSearchFragment : BaseFragment() {
 
                         if (searchSuggestion is LocationSuggestion) {
                             lastQuery = searchSuggestion.stationCode
-                            Timber.d("onSuggestionClicked(), value: $searchSuggestion")
+                            Timber.d("onSuggestionClicked(), stationCode: ${searchSuggestion.stationCode}")
+
+                            callback?.onNavigateToDetail(searchSuggestion.stationCode, searchSuggestion.name)
                         }
                     }
                 })
@@ -213,5 +221,24 @@ class LocationSearchFragment : BaseFragment() {
         listener?.let { anim.addListener(listener) }
         anim.duration = ANIM_DURATION
         anim.start()
+    }
+
+    interface BaseExampleFragmentCallbacks {
+        fun onAttachSearchViewToDrawer(searchView: FloatingSearchView)
+        fun onNavigateToDetail(stationCode: String, locationName: String)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is LocationSearchFragment.BaseExampleFragmentCallbacks) {
+            callback = context
+        } else {
+            throw RuntimeException(context!!.toString() + " must implement BaseExampleFragmentCallbacks")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback = null
     }
 }
