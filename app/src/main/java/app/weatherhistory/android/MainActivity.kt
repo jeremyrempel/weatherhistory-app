@@ -7,8 +7,7 @@ import android.support.v4.widget.DrawerLayout
 
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import app.weatherhistory.android.fragment.BaseFragment
-import app.weatherhistory.android.fragment.LocationSearchFragment
+import app.weatherhistory.android.search.LocationSearchFragment
 import com.arlib.floatingsearchview.FloatingSearchView
 import kotlinx.android.synthetic.main.activity_main.*
 

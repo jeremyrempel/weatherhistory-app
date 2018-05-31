@@ -1,4 +1,4 @@
-package app.weatherhistory.android.fragment
+package app.weatherhistory.android.search
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -12,8 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import app.weatherhistory.android.R
-import app.weatherhistory.android.data.LocationSuggestion
-import app.weatherhistory.android.repository.LocationRepositoryRetrofit
+import app.weatherhistory.android.BaseFragment
 import app.weatherhistory.model.Location
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion

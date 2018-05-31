@@ -1,6 +1,5 @@
-package app.weatherhistory.android.repository
+package app.weatherhistory.android.viewdetail
 
-import app.weatherhistory.android.model.MonthlyAverage
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Query

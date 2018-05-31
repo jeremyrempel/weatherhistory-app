@@ -1,6 +1,5 @@
-package app.weatherhistory.android.repository
+package app.weatherhistory.android
 
-import app.weatherhistory.android.URL
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -8,7 +7,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
-class Retrofit {
+class RetrofitUtil {
 
     companion object {
         private var INSTANCE: Retrofit? = null

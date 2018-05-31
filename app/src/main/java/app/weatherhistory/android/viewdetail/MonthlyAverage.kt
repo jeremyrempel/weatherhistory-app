@@ -1,4 +1,4 @@
-package app.weatherhistory.android.model
+package app.weatherhistory.android.viewdetail
 
 /**
  * Created by jrempel on 10/13/17.

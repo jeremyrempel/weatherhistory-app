@@ -1,4 +1,4 @@
-package app.weatherhistory.android.fragment
+package app.weatherhistory.android
 
 import android.content.Context
 import android.support.v4.app.Fragment

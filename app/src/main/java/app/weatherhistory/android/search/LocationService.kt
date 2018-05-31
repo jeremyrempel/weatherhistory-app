@@ -1,4 +1,4 @@
-package app.weatherhistory.android.repository
+package app.weatherhistory.android.search
 
 import app.weatherhistory.model.Location
 import io.reactivex.Flowable

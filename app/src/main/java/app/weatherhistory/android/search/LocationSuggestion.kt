@@ -1,4 +1,4 @@
-package app.weatherhistory.android.data
+package app.weatherhistory.android.search
 
 import android.os.Parcel
 import android.os.Parcelable

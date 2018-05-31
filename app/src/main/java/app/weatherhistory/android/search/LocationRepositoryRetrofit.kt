@@ -1,4 +1,4 @@
-package app.weatherhistory.android.repository
+package app.weatherhistory.android.search
 
 import android.content.Context
 import app.weatherhistory.model.Location
@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 
 class LocationRepositoryRetrofit(val app: Context) : LocationRepository {
 
-    private val locationService = Retrofit.getInstance(app.cacheDir)?.create(LocationService::class.java)
+    private val locationService = app.weatherhistory.android.RetrofitUtil.getInstance(app.cacheDir)?.create(LocationService::class.java)
 
     override fun findByName(name: String) = locationService?.findByName(name)
             ?: Flowable.empty()
