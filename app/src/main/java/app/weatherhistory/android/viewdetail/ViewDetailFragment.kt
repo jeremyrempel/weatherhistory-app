@@ -1,15 +1,16 @@
 package app.weatherhistory.android.viewdetail
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import app.weatherhistory.android.R
 import kotlinx.android.synthetic.main.fragment_viewdetail.*
-import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
 
 
 class ViewDetailFragment : Fragment() {
@@ -36,18 +37,31 @@ class ViewDetailFragment : Fragment() {
         stationCode = arguments?.getString("stationcode") ?: throw IllegalArgumentException("stationcode is required")
         locationName = arguments?.getString("locationname") ?: throw IllegalArgumentException("locationname is required")
 
+        val model = ViewModelProviders.of(this).get(ViewDetailViewModel::class.java)
         setHasOptionsMenu(true)
+
+        model.stationCode = stationCode
+        model.getData().observe(this, Observer { it?.let { showData(it) } })
+
+        showLoading(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_viewdetail, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun showLoading(isLoading: Boolean) {
 
-        super.onViewCreated(view, savedInstanceState)
-        station_code.text = stationCode
+        val fragment = if (isLoading) LoadingFragment.getInstance() else Fragment()
+
+        childFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commitAllowingStateLoss()
+    }
+
+    private fun showData(data: List<MonthlyAverage>) {
+        showLoading(false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
