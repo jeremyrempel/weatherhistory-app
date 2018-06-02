@@ -43,25 +43,25 @@ class ViewDetailFragment : Fragment() {
         model.stationCode = stationCode
         model.getData().observe(this, Observer { it?.let { showData(it) } })
 
-        showLoading(true)
+        showLoading()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_viewdetail, container, false)
     }
 
-    private fun showLoading(isLoading: Boolean) {
-
-        val fragment = if (isLoading) LoadingFragment.getInstance() else Fragment()
-
+    private fun showLoading() {
         childFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, LoadingFragment.getInstance())
                 .commitAllowingStateLoss()
     }
 
     private fun showData(data: List<MonthlyAverage>) {
-        showLoading(false)
+        childFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, MonthlyChartFragment.getInstance())
+                .commitAllowingStateLoss()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -74,10 +74,11 @@ class ViewDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val a = activity as AppCompatActivity
-        a.setSupportActionBar(my_toolbar)
-        a.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        a.supportActionBar?.title = getString(R.string.monthly_average)
-        a.supportActionBar?.subtitle = locationName
+        (activity as AppCompatActivity).apply {
+            setSupportActionBar(my_toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = getString(R.string.monthly_average)
+            supportActionBar?.subtitle = locationName
+        }
     }
 }

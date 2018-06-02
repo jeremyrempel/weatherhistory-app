@@ -1,5 +1,6 @@
 package app.weatherhistory.android
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -9,20 +10,35 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import app.weatherhistory.android.search.LocationSearchFragment
 import app.weatherhistory.android.viewdetail.ViewDetailFragment
+import app.weatherhistory.android.viewdetail.ViewDetailViewModel
 import com.arlib.floatingsearchview.FloatingSearchView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, LocationSearchFragment.BaseExampleFragmentCallbacks {
 
     private lateinit var drawerLayout: DrawerLayout
+    private var currentScreen: CurrentScreen? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showFragment(LocationSearchFragment())
+        val model = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
-        drawerLayout = drawer_layout
+        if (currentScreen == null) {
+            currentScreen = CurrentScreen.Search("")
+        }
+
+        val frag = when (currentScreen) {
+            is CurrentScreen.ViewOne -> {
+                val s = currentScreen as CurrentScreen.ViewOne
+                ViewDetailFragment.getInstance(s.stationCode, s.locationName)
+            }
+            else -> LocationSearchFragment()
+        }
+
+        showFragment(frag)
+
         val navigationView = nav_view
         navigationView.setNavigationItemSelectedListener(this)
     }
@@ -35,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         showFragment(ViewDetailFragment.getInstance(stationCode, locationName))
     }
 
-    override fun onAttachSearchViewToDrawer(searchView: FloatingSearchView) = searchView.attachNavigationDrawerToMenuButton(drawerLayout)
+    override fun onAttachSearchViewToDrawer(searchView: FloatingSearchView) = searchView.attachNavigationDrawerToMenuButton(drawer_layout)
 
     private fun showFragment(fragment: Fragment) {
         supportFragmentManager
@@ -44,5 +60,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss()
+    }
+
+    sealed class CurrentScreen {
+        data class Search(val a: String) : CurrentScreen()
+        data class ViewOne(val stationCode: String, val locationName: String) : CurrentScreen()
     }
 }

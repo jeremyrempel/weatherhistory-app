@@ -34,6 +34,7 @@ ext {
     roomVersion = '1.1.0'
     archLifecycleVersion = '1.1.1'
     supportLibraryVersion = '27.1.1'
+    mpChartLibraryVersion = 'v3.0.3'
 }
 
 dependencies {
@@ -62,6 +63,9 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retroFitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retroFitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retroFitVersion"
+
+    // charting
+    implementation "com.github.PhilJay:MPAndroidChart:$mpChartLibraryVersion"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

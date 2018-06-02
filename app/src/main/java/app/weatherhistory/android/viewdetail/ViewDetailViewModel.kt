@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData
 import app.weatherhistory.android.RetrofitUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 
 class ViewDetailViewModel : ViewModel() {
@@ -26,6 +27,7 @@ class ViewDetailViewModel : ViewModel() {
                     data?.value = it
                 }, {
                     // fire bad!
+                    Timber.e(it)
                 })
     }
 
