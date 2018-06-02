@@ -1,6 +1,6 @@
 package app.weatherhistory.android.viewdetail
 
-import app.weatherhistory.model.Location
+import app.weatherhistory.android.search.Location
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Query

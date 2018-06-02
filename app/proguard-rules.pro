@@ -19,3 +19,36 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+## retrofit+okhttp
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+-keepattributes Signature
+-keepattributes Exceptions
+-dontwarn okio.**
+-dontwarn okhttp3.internal.platform.*
+-dontwarn javax.annotation.**
+
+# moshi
+-keepclasseswithmembers class * {
+    @com.squareup.moshi.* <methods>;
+}
+-keep @com.squareup.moshi.JsonQualifier interface *
+-keepclassmembers class * {
+    @com.squareup.moshi.FromJson <methods>;
+    @com.squareup.moshi.ToJson <methods>;
+}
+
+# moshi kotlin
+-dontwarn org.jetbrains.annotations.**
+-keep class kotlin.Metadata { *; }
+
+-keepclassmembers class app.weatherhistory.android.search.Location {
+  <init>(...);
+  <fields>;
+}
+
+-keepclassmembers class app.weatherhistory.android.viewdetail.MonthlyAverage {
+  <init>(...);
+  <fields>;
+}

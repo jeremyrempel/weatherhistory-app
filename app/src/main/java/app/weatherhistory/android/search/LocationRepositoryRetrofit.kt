@@ -1,7 +1,6 @@
 package app.weatherhistory.android.search
 
 import android.content.Context
-import app.weatherhistory.model.Location
 import io.reactivex.Flowable
 import app.weatherhistory.android.RetrofitUtil
 

@@ -1,4 +1,4 @@
-package app.weatherhistory.model
+package app.weatherhistory.android.search
 
 /**
  * Created by jrempel on 1/27/18.

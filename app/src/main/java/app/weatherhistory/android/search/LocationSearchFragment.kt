@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import app.weatherhistory.android.R
-import app.weatherhistory.model.Location
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -14,7 +14,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -38,7 +39,6 @@ ext {
 }
 
 dependencies {
-
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     // support library
@@ -66,8 +66,7 @@ dependencies {
 
     // charting
     implementation "com.github.PhilJay:MPAndroidChart:$mpChartLibraryVersion"
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
 
