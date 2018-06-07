@@ -52,3 +52,6 @@
   <init>(...);
   <fields>;
 }
+
+# mpchart
+-keep class com.github.mikephil.charting.** { *; }
