@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import app.weatherhistory.android.CurrentScreen
 import app.weatherhistory.android.R
 import kotlinx.android.synthetic.main.fragment_viewdetail.*
 
@@ -19,12 +20,12 @@ class ViewDetailFragment : Fragment() {
     private lateinit var locationName: String
 
     companion object {
-        fun getInstance(stationCode: String, locationName: String): Fragment {
+        fun getInstance(state: CurrentScreen.ViewOne): Fragment {
             val b = Bundle()
             val frag = ViewDetailFragment()
 
-            b.putString("stationcode", stationCode)
-            b.putString("locationname", locationName)
+            b.putString("stationcode", state.stationCode)
+            b.putString("locationname", state.locationName)
             frag.arguments = b
 
             return frag

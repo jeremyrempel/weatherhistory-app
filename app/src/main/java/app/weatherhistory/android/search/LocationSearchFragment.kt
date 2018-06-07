@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import app.weatherhistory.android.CurrentScreen
 import app.weatherhistory.android.R
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
@@ -31,6 +32,10 @@ class LocationSearchFragment : Fragment() {
     private val ANIM_DURATION: Long = 350
     var callback: LocationSearchFragment.BaseExampleFragmentCallbacks? = null
 
+
+    companion object {
+        fun getInstance(state: CurrentScreen.Search) = LocationSearchFragment()
+    }
 
     /**
      * The alpha value to set, between 0 and 255
