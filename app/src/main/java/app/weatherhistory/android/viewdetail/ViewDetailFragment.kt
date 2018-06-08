@@ -42,7 +42,7 @@ class ViewDetailFragment : Fragment() {
         setHasOptionsMenu(true)
 
         model.stationCode = stationCode
-        model.getData().observe(this, Observer { it?.let { showData(it) } })
+        model.getData().observe(this, Observer { it?.let { showData() } })
 
         showLoading()
     }
@@ -58,7 +58,7 @@ class ViewDetailFragment : Fragment() {
                 .commitAllowingStateLoss()
     }
 
-    private fun showData(data: List<MonthlyAverage>) {
+    private fun showData() {
         childFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, MonthlyChartFragment.getInstance())

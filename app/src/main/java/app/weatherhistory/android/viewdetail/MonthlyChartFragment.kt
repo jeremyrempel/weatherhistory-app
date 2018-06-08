@@ -8,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.weatherhistory.android.R
-import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_viewdetail_chart.*
 
 
@@ -41,7 +40,7 @@ class MonthlyChartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val chart = monthlytempchart
+        val chart = monthlytempchart as BarChart
         chart.setNoDataText("Search for a location using action bar above")
 
         val months = arrayListOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
@@ -50,17 +49,25 @@ class MonthlyChartFragment : Fragment() {
     }
 
     private fun showData(data: List<MonthlyAverage>) {
-        val entries = data.map { BarEntry(it.month.toFloat(), it.maxtemp.celciusToFarenheit()) }
-        val dataSet = BarDataSet(entries, getString(R.string.farenheit_label))
-        dataSet.setColors(intArrayOf(R.color.secondaryColor), context)
 
-        val chart = monthlytempchart
+        val avgTempEntries = data.map {
+            BarEntry(
+                    it.month.toFloat(),
+                    floatArrayOf(it.maxtemp.celsiusToFahrenheit(), it.mintemp.celsiusToFahrenheit())
+            )
+        }
+        val dataSet = BarDataSet(avgTempEntries, getString(R.string.tempf_label))
+        dataSet.stackLabels = arrayOf(getString(R.string.minfarenheit_label), getString(R.string.maxfarenheit_label))
+        dataSet.setColors(intArrayOf(android.R.color.holo_orange_light, android.R.color.holo_blue_light), context)
+        dataSet.setDrawValues(false)
+
+        val chart = monthlytempchart as BarChart
         chart.data = BarData(dataSet)
         chart.description.isEnabled = false
-        chart.animateXY(3000, 3000)
+        chart.animateY(2000)
 
         chart.invalidate()
     }
 }
 
-fun Float.celciusToFarenheit() = this * 9 / 5 + 32
+fun Float.celsiusToFahrenheit() = this * 9 / 5 + 32
