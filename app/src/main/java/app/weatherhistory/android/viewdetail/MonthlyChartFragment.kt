@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_viewdetail_chart.*
+import java.math.BigDecimal
 
 
 class MonthlyChartFragment : Fragment() {
@@ -51,10 +52,10 @@ class MonthlyChartFragment : Fragment() {
     private fun showData(data: List<MonthlyAverage>) {
 
         val avgTempEntries = data.map {
-            BarEntry(
-                    it.month.toFloat(),
-                    floatArrayOf(it.maxtemp.celsiusToFahrenheit(), it.mintemp.celsiusToFahrenheit())
-            )
+            val min = it.mintemp.cToF()
+            val max = it.maxtemp.cToF() - min
+
+            BarEntry(it.month.toFloat(), floatArrayOf(min, max))
         }
         val dataSet = BarDataSet(avgTempEntries, getString(R.string.tempf_label))
         dataSet.stackLabels = arrayOf(getString(R.string.minfarenheit_label), getString(R.string.maxfarenheit_label))
@@ -70,4 +71,4 @@ class MonthlyChartFragment : Fragment() {
     }
 }
 
-fun Float.celsiusToFahrenheit() = this * 9 / 5 + 32
+fun Float.cToF() = (BigDecimal(toString()) * BigDecimal(1.8) + BigDecimal(32)).toFloat()
