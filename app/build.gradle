@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "app.weatherhistory.weatherhistory"
+        applicationId "app.weatherhistory.android"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
@@ -68,6 +69,10 @@ dependencies {
     // charting
     implementation "com.github.PhilJay:MPAndroidChart:$mpChartLibraryVersion"
 
+    // crash reporting
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
@@ -75,3 +80,6 @@ dependencies {
     //androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'

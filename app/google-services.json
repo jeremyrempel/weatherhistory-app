@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "607980660459",
+    "firebase_url": "https://weatherhistory-48a93.firebaseio.com",
+    "project_id": "weatherhistory-48a93",
+    "storage_bucket": "weatherhistory-48a93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607980660459:android:5b8c9333b98caa9b",
+        "android_client_info": {
+          "package_name": "app.weatherhistory.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "607980660459-btqhtmdddj5lro3h0489e2oaue63pbb8.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "607980660459-btqhtmdddj5lro3h0489e2oaue63pbb8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4vZZstUsue1Irr6YEbfPOxz3c4Y52Gl0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
