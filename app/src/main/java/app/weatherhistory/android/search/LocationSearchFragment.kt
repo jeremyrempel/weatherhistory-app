@@ -30,7 +30,7 @@ class LocationSearchFragment : Fragment() {
 
     private var lastQuery = ""
     private val ANIM_DURATION: Long = 350
-    var callback: LocationSearchFragment.BaseExampleFragmentCallbacks? = null
+    var callback: LocationSearchFragment.FragmentCallbacks? = null
 
 
     companion object {
@@ -228,17 +228,17 @@ class LocationSearchFragment : Fragment() {
         anim.start()
     }
 
-    interface BaseExampleFragmentCallbacks {
+    interface FragmentCallbacks {
         fun onAttachSearchViewToDrawer(searchView: FloatingSearchView)
         fun onNavigateToDetail(stationCode: String, locationName: String)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is LocationSearchFragment.BaseExampleFragmentCallbacks) {
+        if (context is LocationSearchFragment.FragmentCallbacks) {
             callback = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement BaseExampleFragmentCallbacks")
+            throw RuntimeException(context!!.toString() + " must implement FragmentCallbacks")
         }
     }
 

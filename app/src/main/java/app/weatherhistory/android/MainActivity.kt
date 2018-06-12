@@ -14,7 +14,7 @@ import app.weatherhistory.android.viewdetail.ViewDetailFragment
 import com.arlib.floatingsearchview.FloatingSearchView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, LocationSearchFragment.BaseExampleFragmentCallbacks {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, LocationSearchFragment.FragmentCallbacks, ViewDetailFragment.FragmentCallbacks {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var model: MainActivityViewModel
@@ -31,26 +31,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateState(newState: CurrentScreen) {
-        showFragment(when (newState) {
-            is CurrentScreen.Search -> LocationSearchFragment.getInstance(newState)
-            is CurrentScreen.ViewOne -> ViewDetailFragment.getInstance(newState)
-        })
+        when (newState) {
+            is CurrentScreen.Search -> showFragment(LocationSearchFragment.getInstance(newState))
+            is CurrentScreen.ViewOne -> showFragment(ViewDetailFragment.getInstance(newState), false)
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onNavigateHome() = model.gotoSearch()
+
     override fun onNavigateToDetail(stationCode: String, locationName: String) = model.gotoViewOne(stationCode, locationName)
 
     override fun onAttachSearchViewToDrawer(searchView: FloatingSearchView) = searchView.attachNavigationDrawerToMenuButton(drawer_layout)
 
-    private fun showFragment(fragment: Fragment) {
-        supportFragmentManager
+    private fun showFragment(fragment: Fragment, addtoBackStack: Boolean = true) {
+        val trans = supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out)
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit()
+
+        if (addtoBackStack) trans.addToBackStack(null)
+        trans.commit()
     }
+
+    override fun onBackPressed() = onNavigateHome()
 }

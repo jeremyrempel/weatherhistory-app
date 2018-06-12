@@ -18,6 +18,10 @@ class MainActivityViewModel : ViewModel() {
     fun gotoViewOne(stationCode: String, locationName: String) {
         state.value = CurrentScreen.ViewOne(stationCode, locationName)
     }
+
+    fun gotoSearch() {
+        state.value = CurrentScreen.Search
+    }
 }
 
 sealed class CurrentScreen {

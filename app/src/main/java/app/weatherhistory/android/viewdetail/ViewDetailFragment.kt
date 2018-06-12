@@ -2,6 +2,7 @@ package app.weatherhistory.android.viewdetail
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -18,6 +19,7 @@ class ViewDetailFragment : Fragment() {
 
     private lateinit var stationCode: String
     private lateinit var locationName: String
+    var callback: FragmentCallbacks? = null
 
     companion object {
         fun getInstance(state: CurrentScreen.ViewOne): Fragment {
@@ -67,7 +69,7 @@ class ViewDetailFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            android.R.id.home -> activity?.supportFragmentManager?.popBackStack()
+            android.R.id.home -> callback?.onNavigateHome()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -81,5 +83,23 @@ class ViewDetailFragment : Fragment() {
             supportActionBar?.title = getString(R.string.monthly_average)
             supportActionBar?.subtitle = locationName
         }
+    }
+
+    interface FragmentCallbacks {
+        fun onNavigateHome()
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is FragmentCallbacks) {
+            callback = context
+        } else {
+            throw RuntimeException(context!!.toString() + " must implement FragmentCallbacks")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback = null
     }
 }
