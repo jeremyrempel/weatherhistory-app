@@ -102,7 +102,7 @@ class LocationSearchFragment : Fragment() {
         val searchView = floating_search_view
         val subject = setupSearchSubject(searchView)
 
-        searchView.setOnQueryChangeListener({ oldQuery, newQuery ->
+        searchView.setOnQueryChangeListener { oldQuery, newQuery ->
             if (oldQuery != "" && newQuery == "") {
                 searchView.clearSuggestions()
             } else {
@@ -111,7 +111,7 @@ class LocationSearchFragment : Fragment() {
             }
 
             Timber.d("onSearchTextChanged($newQuery)")
-        })
+        }
 
         searchView.setOnSearchListener(
                 object : FloatingSearchView.OnSearchListener {
@@ -176,19 +176,18 @@ class LocationSearchFragment : Fragment() {
 
         //handle menu clicks the same way as you would
         //in a regular activity
-        searchView.setOnMenuItemClickListener(
-                { item ->
+        searchView.setOnMenuItemClickListener { item ->
 
-                    when (item.itemId) {
-                        R.id.action_location -> {
-                            // todo
-                            /* query based on location */
-                        }
-                        else -> {
-                            Timber.w("Unhandled action: $item")
-                        }
-                    }
-                })
+            when (item.itemId) {
+                R.id.action_location -> {
+                    // todo
+                    /* query based on location */
+                }
+                else -> {
+                    Timber.w("Unhandled action: $item")
+                }
+            }
+        }
 
         /*
          * Here you have access to the left icon and the text of a given suggestion
@@ -201,13 +200,12 @@ class LocationSearchFragment : Fragment() {
          * Keep in mind that the suggestion list is a RecyclerView, so views are reused for different
          * items in the list.
          */
-        searchView.setOnBindSuggestionCallback(
-                { suggestionView, leftIcon, textView, item, itemPosition ->
-                    val colorSuggestion = item
+        searchView.setOnBindSuggestionCallback { suggestionView, leftIcon, textView, item, itemPosition ->
+            val colorSuggestion = item
 
-                    // todo show country flag
-                    //leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_history_black_24dp, null))
-                })
+            // todo show country flag
+            //leftIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_history_black_24dp, null))
+        }
 
         /*
          * When the user types some text into the search field, a clear button (and 'x' to the
@@ -215,8 +213,7 @@ class LocationSearchFragment : Fragment() {
          *
          * This listener provides a callback for when this button is clicked.
          */
-        searchView.setOnClearSearchActionListener(
-                { Timber.d("onClearSearchClicked()") })
+        searchView.setOnClearSearchActionListener { Timber.d("onClearSearchClicked()") }
     }
 
     private fun fadeDimBackground(from: Int, to: Int, listener: Animator.AnimatorListener?) {
