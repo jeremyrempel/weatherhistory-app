@@ -33,7 +33,7 @@ androidExtensions {
 
 ext {
     floatingSearchVersion = '2.1.1'
-    timberVersion = '4.7.0'
+    timberVersion = '4.7.1'
     retroFitVersion = '2.4.0'
     roomVersion = '1.1.0'
     archLifecycleVersion = '1.1.1'
@@ -42,7 +42,7 @@ ext {
     playLocationVersion = '15.0.1'
 
     rxJavaVersion = '2.1.9'
-    rxAndroidVersion = '2.0.2'
+    rxAndroidVersion = '2.1.0'
     rxLocationVersion = '1.0.5'
 }
 
