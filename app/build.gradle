@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 // enable @Persistence
@@ -30,13 +34,16 @@ androidExtensions {
 ext {
     floatingSearchVersion = '2.1.1'
     timberVersion = '4.7.0'
-    rxJavaVersion = '2.1.9'
-    rxAndroidVersion = '2.0.1'
     retroFitVersion = '2.4.0'
     roomVersion = '1.1.0'
     archLifecycleVersion = '1.1.1'
-    supportLibraryVersion = '28.0.0-alpha3'
+    supportLibraryVersion = '28.0.0'
     mpChartLibraryVersion = 'v3.0.3'
+    playLocationVersion = '15.0.1'
+
+    rxJavaVersion = '2.1.9'
+    rxAndroidVersion = '2.0.2'
+    rxLocationVersion = '1.0.5'
 }
 
 dependencies {
@@ -72,7 +79,6 @@ dependencies {
     // crash reporting
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
     implementation 'com.google.firebase:firebase-core:16.0.0'
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'

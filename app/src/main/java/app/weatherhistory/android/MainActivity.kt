@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, LocationSearchFragment.FragmentCallbacks, ViewDetailFragment.FragmentCallbacks {
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var model: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

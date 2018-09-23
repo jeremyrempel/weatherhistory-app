@@ -20,9 +20,9 @@ class RetrofitUtil {
                     val cacheSize: Long = 10 * 1024 * 1024 // 10 MB
                     val cache = Cache(cacheDir, cacheSize)
 
-                    val okHttpClient = OkHttpClient.Builder()
-                            .cache(cache)
-                            .build()
+//                    val okHttpClient = OkHttpClient.Builder()
+//                            .cache(cache)
+//                            .build()
 
                     INSTANCE = Retrofit.Builder()
                             .baseUrl(URL)
